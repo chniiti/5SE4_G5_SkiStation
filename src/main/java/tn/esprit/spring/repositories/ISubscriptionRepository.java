@@ -22,8 +22,9 @@ public interface ISubscriptionRepository extends CrudRepository<Subscription, Lo
     List<Subscription> findDistinctOrderByEndDateAsc();
 
 
-    @Query("select (sum(s.price))/(count(s)) from Subscription s where s.typeSub = ?1")
-    Float recurringRevenueByTypeSubEquals(TypeSubscription typeSub);
+    @Query("SELECT COALESCE(SUM(s.price)/COUNT(s.numSub), 0.0) FROM Subscription s WHERE s.typeSub = :typeSub")
+    Float recurringRevenueByTypeSubEquals(@Param("typeSub") TypeSubscription typeSub);
+
 
 
 }

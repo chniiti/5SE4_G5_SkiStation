@@ -47,5 +47,32 @@ public class InstructorServicesImpl implements IInstructorServices{
         return instructorRepository.save(instructor);
     }
 
+    public void removeInstructor(Long numInstructor) {
+        instructorRepository.deleteById(numInstructor);
+    }
+
+    public Instructor assignInstructorToMultipleCourses(Long numInstructor, Set<Long> courseIds) {
+        Instructor instructor = instructorRepository.findById(numInstructor).orElse(null);
+        if (instructor != null) {
+            Set<Course> courses = new HashSet<>();
+            for (Long courseId : courseIds) {
+                courseRepository.findById(courseId).ifPresent(courses::add);
+            }
+            instructor.setCourses(courses);
+            return instructorRepository.save(instructor);
+        }
+        return null;
+    }
+
+    public List<Instructor> findInstructorsByCourseLevel(int level) {
+        List<Course> courses = courseRepository.findByLevel(level);
+        Set<Long> instructorIds = new HashSet<>();
+        for (Course course : courses) {
+            if (course.getInstructor() != null) {
+                instructorIds.add(course.getInstructor().getNumInstructor());
+            }
+        }
+        return instructorRepository.findAllById(instructorIds);
+    }
 
 }
