@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+
+  # MySQL Database Service
+  database:
+    image: mysql:8.0
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stationSki
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Spring Boot Backend Application Service
+  springboot-app:
+    image: bilelchniti/ski-spring  # Using your Spring Boot image
+    container_name: springboot_app
+    ports:
+      - "8083:8082"  # Mapping Spring Boot app's port 8081 to 8082 on the host
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/stationSki
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD:
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: 'prometheus'
+      MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED: 'true'
+      MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED: 'true'
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW-DETAILS: 'always'
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url": "jdbc:mysql://database:3306/stationSki?createDatabaseIfNotExist=true",
+        "spring.datasource.username": "root",
+        "spring.datasource.password": "",
+        "spring.jpa.properties.hibernate.dialect":"org.hibernate.dialect.MySQLDialect",
+        "spring.jpa.hibernate.ddl-auto": "update"
+      }'
+    depends_on:
+      - database
+    volumes:
+      - springboot_logs:/logs
+    stdin_open: true
+    tty: true
+
+
+volumes:
+  mysql_data:  # Volume for MySQL data
+  springboot_logs:  # Volume for Spring Boot logs
