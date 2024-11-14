@@ -44,6 +44,7 @@ services:
     stdin_open: true
     tty: true
 
+
 volumes:
   mysql_data:  # Volume for MySQL data
   springboot_logs:  # Volume for Spring Boot logs
