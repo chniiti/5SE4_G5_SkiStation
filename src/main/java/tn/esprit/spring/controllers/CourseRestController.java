@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/course")
 @RequiredArgsConstructor
 public class CourseRestController {
-    
+    //test
     private final ICourseServices courseServices;
 
     @Operation(description = "Add Course")
