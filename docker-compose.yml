@@ -21,7 +21,7 @@ services:
     image: bilelchniti/ski-spring  # Using your Spring Boot image
     container_name: springboot_app
     ports:
-      - "8083:8082"  # Mapping Spring Boot app's port 8081 to 8082 on the host
+      - "8083:8089"  
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/stationSki
       SPRING_DATASOURCE_USERNAME: root
